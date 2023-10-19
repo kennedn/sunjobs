@@ -1,0 +1,12 @@
+resources:
+  - cronjob.yaml
+
+namespace: default
+
+configMapGenerator:
+- name: sunjobs-config
+  behavior: create
+  options:
+        disableNameSuffixHash: true
+  files:
+    - "config/variables.py"
