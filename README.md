@@ -58,7 +58,7 @@ kubectl apply -k .
 ```
 
 #### Optional: Manually trigger the job and ensure sunrise and sunset cronjobs appear
-````bash 
+```bash 
 kubectl create job --from=cronjob/sunjobs test-sunjobs
 ```
 
