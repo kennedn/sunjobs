@@ -100,8 +100,8 @@ def main():
     logger.info(f"Retrieved sunrise time: {sunrise_time}")
     logger.info(f"Retrieved sunset time: {sunset_time}")
 
-    create_or_update_kubernetes_job("sunrise-job", sunrise_time, 0)
-    create_or_update_kubernetes_job("sunset-job", sunset_time, 1)
+    create_or_update_kubernetes_job("sunrise-job", sunrise_time, True)
+    create_or_update_kubernetes_job("sunset-job", sunset_time, False)
 
 if __name__ == "__main__":
     main()
