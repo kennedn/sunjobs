@@ -31,9 +31,11 @@ Required variables in variables.py are as follows:
 |OPENWEATHERMAP_API_KEY| API key for OpenWeatherMaps|
 |LATITUDE | Latitude to sample sunrise / sunset times at|
 |LONGITUDE | Longitude to sample sunrise / sunset times at|
+|TIMEZONE| Timezone to be applied to returned UTC timestamps|
 |CONTAINER_IMAGE | Container image to use for sunrise / sunset commands|
 |SUNRISE_COMMAND | Command to run at sunrise|
 |SUNSET_COMMAND  | Command to run at sunset|
+|OFFSET_MINUTES | Minutes to offset each cron schedule by|
 
 Example:
 
@@ -46,10 +48,16 @@ OPENWEATHERMAP_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 LATITUDE = 51.550
 LONGITUDE = -0.110
 
+# Define timezone
+TIMEZONE = "Europe/London"
+
 # Container commands
 CONTAINER_IMAGE = "curlimages/curl"
 SUNRISE_COMMAND = ["curl", "-X", "PUT", "https://cool.api/v1/meross/sad_light?code=toggle&value=0"]
 SUNSET_COMMAND = ["curl", "-X", "PUT", "https://cool.api/v1/meross/sad_light?code=toggle&value=1"]
+
+# Trigger offset
+OFFSET_MINUTES = 10
 ```
 
 #### Apply the cronjob and variables.py to the cluster

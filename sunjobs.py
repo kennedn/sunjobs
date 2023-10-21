@@ -3,7 +3,7 @@ import logging
 from pytz import UTC, timezone
 from kubernetes import client, config
 from datetime import datetime, timedelta
-from variables import OPENWEATHERMAP_API_KEY, LATITUDE, LONGITUDE, CONTAINER_IMAGE, SUNRISE_COMMAND, SUNSET_COMMAND
+from variables import OPENWEATHERMAP_API_KEY, LATITUDE, LONGITUDE, TIMEZONE, CONTAINER_IMAGE, SUNRISE_COMMAND, SUNSET_COMMAND, OFFSET_MINUTES
 
 # Define the base URL for OpenWeatherMap API
 OPENWEATHERMAP_URL = "http://api.openweathermap.org/data/2.5"
@@ -49,8 +49,8 @@ def get_sunrise_sunset_times():
     data = response.json()
     sunrise_timestamp = data["sys"]["sunrise"]
     sunset_timestamp = data["sys"]["sunset"]
-    sunrise_time = datetime.utcfromtimestamp(sunrise_timestamp).replace(tzinfo=UTC).astimezone(timezone('Europe/London'))
-    sunset_time = datetime.utcfromtimestamp(sunset_timestamp).replace(tzinfo=UTC).astimezone(timezone('Europe/London'))
+    sunrise_time = datetime.utcfromtimestamp(sunrise_timestamp).replace(tzinfo=UTC).astimezone(timezone(TIMEZONE))
+    sunset_time = datetime.utcfromtimestamp(sunset_timestamp).replace(tzinfo=UTC).astimezone(timezone(TIMEZONE))
     return sunrise_time, sunset_time
 
 def create_or_update_kubernetes_job(name, schedule_time, sunrise):
@@ -61,7 +61,7 @@ def create_or_update_kubernetes_job(name, schedule_time, sunrise):
     else:
         job["spec"]["template"]["spec"]["containers"][0]["command"] = SUNSET_COMMAND
 
-    job_schedule = (schedule_time - timedelta(minutes=10)).strftime("%M %H * * *")
+    job_schedule = (schedule_time - timedelta(minutes=OFFSET_MINUTES)).strftime("%M %H * * *")
     cron_job = client.V1CronJob(
         metadata=client.V1ObjectMeta(name=name),
         spec=client.V1CronJobSpec(
@@ -77,11 +77,11 @@ def create_or_update_kubernetes_job(name, schedule_time, sunrise):
         existing_cron_job = api_instance.read_namespaced_cron_job(name=name, namespace="default")
         existing_cron_job.spec.schedule = cron_job.spec.schedule
         api_instance.replace_namespaced_cron_job(name=name, namespace="default", body=existing_cron_job)
-        logger.info(f"{name} job updated")
+        logger.info(f"{name} job updated with cron schedule {job_schedule}")
     except client.rest.ApiException as e:
         if e.status == 404:  # CronJob doesn't exist, create it
             api_instance.create_namespaced_cron_job(namespace="default", body=cron_job)
-            logger.info(f"{name} job created")
+            logger.info(f"{name} job created with cron schedule {job_schedule}")
         else:
             logger.error(f"Error: {e}")
             raise Exception("Unable to create or update cronjob")
