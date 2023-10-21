@@ -79,8 +79,8 @@ output:
 ❯ kubectl logs jobs/test-sunjobs
 2023-10-21 10:49:35,479 - INFO - Retrieved sunrise time: 2023-10-21 07:55:17+01:00
 2023-10-21 10:49:35,479 - INFO - Retrieved sunset time: 2023-10-21 17:59:52+01:00
-2023-10-21 10:49:35,501 - INFO - sunrise-job job created
-2023-10-21 10:49:35,531 - INFO - sunset-job job created
+2023-10-21 10:49:35,501 - INFO - sunrise-job job created with cron schedule 45 07 * * *
+2023-10-21 10:49:35,531 - INFO - sunset-job job created with cron schedule 49 17 * * * 
 ```
 
 ```bash
