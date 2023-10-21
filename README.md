@@ -71,7 +71,7 @@ output:
 ❯ kubectl logs jobs/test-sunjobs
 2023-10-21 10:49:35,479 - INFO - Retrieved sunrise time: 2023-10-21 07:55:17+01:00
 2023-10-21 10:49:35,479 - INFO - Retrieved sunset time: 2023-10-21 17:59:52+01:00
-2023-10-21 10:49:35,501 - INFO - sunrise-job job updated
+2023-10-21 10:49:35,501 - INFO - sunrise-job job created
 2023-10-21 10:49:35,531 - INFO - sunset-job job created
 ```
 
@@ -84,7 +84,7 @@ output:
 ❯ kubectl get cronjobs
 NAME                      SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 sunjobs                   0 0 * * *     False     0        12h             40h
-sunrise-job               45 07 * * *   False     0        4h24m           41h
+sunrise-job               45 07 * * *   False     0        <none>          41h
 sunset-job                49 17 * * *   False     0        <none>          17m
 ```
 
