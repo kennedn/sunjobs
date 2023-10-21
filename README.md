@@ -57,7 +57,7 @@ SUNSET_COMMAND = ["curl", "-X", "PUT", "https://cool.api/v1/meross/sad_light?cod
 kubectl apply -k .
 ```
 
-#### Optional: Manually trigger then job and ensure sunrise and sunset cronjobs appear
+#### Optional: Manually trigger the job and ensure sunrise and sunset cronjobs appear
 ````bash 
 kubectl create job --from=cronjob/sunjobs test-sunjobs
 ```
