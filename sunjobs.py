@@ -65,7 +65,6 @@ def create_or_update_kubernetes_job(name, schedule_time, sunrise):
     cron_job = client.V1CronJob(
         metadata=client.V1ObjectMeta(name=name),
         spec=client.V1CronJobSpec(
-            successfulJobsHistoryLimit=1,
             schedule=job_schedule,
             job_template=client.V1JobTemplateSpec(
                 spec=client.V1JobSpec(template=job["spec"]["template"])
@@ -81,6 +80,9 @@ def create_or_update_kubernetes_job(name, schedule_time, sunrise):
         api_instance.create_namespaced_cron_job(namespace="default", body=cron_job)
         logger.info(f"{name} job created with cron schedule {job_schedule}")
     except client.rest.ApiException as e:
+        if e.status == 404:
+            api_instance.create_namespaced_cron_job(namespace="default", body=cron_job)
+            return
         logger.error(f"Error: {e}")
         raise Exception("Unable to create cronjob")
 

@@ -13,6 +13,7 @@ spec:
             app: sunjobs
         spec:
           restartPolicy: OnFailure
+          dnsPolicy: ClusterFirst
           containers:
           - image: quay.io/kennedn/sunjobs
             name: sunjobs
